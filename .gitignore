@@ -1,0 +1,10 @@
+.env
+.vscode
+cover.out
+bin/
+.idea
+db-data
+cmd/__debug_*
+sendgrid.env
+minio-data
+.env.example
