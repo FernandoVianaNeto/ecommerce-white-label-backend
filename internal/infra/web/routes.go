@@ -8,7 +8,7 @@ import (
 
 func Routes(engine *gin.Engine, server *Server) *gin.Engine {
 	{
-		auth := engine.Group("/v1/auth")
+		auth := engine.Group("/auth")
 		{
 			auth.POST("/", server.AuthHandler)
 			auth.POST("/google", server.GoogleAuthHandler)
@@ -19,7 +19,7 @@ func Routes(engine *gin.Engine, server *Server) *gin.Engine {
 	}
 
 	{
-		user := engine.Group("/v1/user")
+		user := engine.Group("/user")
 		{
 			user.POST("/create", server.CreateUserHandler)
 			user.POST("/create/google", server.CreateGoogleUserHandler)
@@ -29,8 +29,7 @@ func Routes(engine *gin.Engine, server *Server) *gin.Engine {
 	}
 
 	{
-		product := engine.Group("/product")
-		// product := engine.Group("/v1/product", middleware.JwtAuthMiddleware())
+		product := engine.Group("/product", middleware.JwtAuthMiddleware())
 		{
 			product.POST("/", server.CreateProductHandler)
 			product.GET("/list", server.ListProducts)
@@ -42,7 +41,7 @@ func Routes(engine *gin.Engine, server *Server) *gin.Engine {
 	}
 
 	{
-		heathCheck := engine.Group("/v1/health")
+		heathCheck := engine.Group("/health")
 		{
 			heathCheck.GET("/check", server.HealthCheckHandler)
 		}

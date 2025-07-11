@@ -36,14 +36,15 @@ func (f *UserRepository) Create(ctx context.Context, input entity.User) error {
 	}
 
 	_, err := f.collection.InsertOne(ctx, UserModel{
-		Uuid:         input.Uuid,
-		Email:        input.Email,
-		Name:         input.Name,
-		BirthDate:    input.BirthDate,
-		Password:     passwordString,
-		Sports:       &input.Sports,
-		AuthProvider: input.AuthProvider,
-		Photo:        *input.Photo,
+		Uuid:            input.Uuid,
+		Email:           input.Email,
+		Name:            input.Name,
+		BirthDate:       input.BirthDate,
+		Password:        passwordString,
+		AuthProvider:    input.AuthProvider,
+		ShippingAddress: input.ShippingAddress,
+		BillingAddress:  input.BillingAddress,
+		GoogleSub:       input.GoogleSub,
 	})
 
 	return err
@@ -67,13 +68,13 @@ func (f *UserRepository) GetByUuid(ctx context.Context, userUuid string) (*entit
 	}
 
 	entity := entity.User{
-		Uuid:         model.Uuid,
-		Email:        model.Email,
-		BirthDate:    model.BirthDate,
-		Name:         model.Name,
-		Sports:       *model.Sports,
-		AuthProvider: model.AuthProvider,
-		Photo:        &model.Photo,
+		Uuid:            model.Uuid,
+		Email:           model.Email,
+		BirthDate:       model.BirthDate,
+		Name:            model.Name,
+		AuthProvider:    model.AuthProvider,
+		BillingAddress:  model.BillingAddress,
+		ShippingAddress: model.ShippingAddress,
 	}
 
 	return &entity, err
@@ -102,7 +103,6 @@ func (f *UserRepository) GetByEmailAndAuthProvider(ctx context.Context, email st
 		Email:     model.Email,
 		BirthDate: model.BirthDate,
 		Name:      model.Name,
-		Sports:    *model.Sports,
 		Password: func() *[]byte {
 			if model.Password == nil {
 				return nil
@@ -110,7 +110,9 @@ func (f *UserRepository) GetByEmailAndAuthProvider(ctx context.Context, email st
 			b := []byte(*model.Password)
 			return &b
 		}(),
-		AuthProvider: model.AuthProvider,
+		AuthProvider:    model.AuthProvider,
+		BillingAddress:  model.BillingAddress,
+		ShippingAddress: model.ShippingAddress,
 	}
 
 	return &entity, err
@@ -128,8 +130,11 @@ func (f *UserRepository) UpdateByUuid(ctx context.Context, input dto.UpdateUserI
 	if input.Email != nil {
 		setFields["email"] = *input.Email
 	}
-	if input.Sports != nil {
-		setFields["sports"] = input.Sports
+	if input.ShippingAddress != nil {
+		setFields["shipping_address"] = input.ShippingAddress
+	}
+	if input.ShippingAddress != nil {
+		setFields["shipping_address"] = input.BillingAddress
 	}
 	if input.Name != nil {
 		setFields["name"] = *input.Name

@@ -1,9 +1,10 @@
 package domain_response
 
 type GetUserProfileResponse struct {
-	Name      string    `json:"name"`
-	Email     string    `json:"email"`
-	Sports    *[]string `json:"sports"`
-	BirthDate string    `json:"birth_date"`
-	PhotoUrl  string    `json:"photo_url"`
+	Uuid            string `json:"uuid"`
+	Name            string `json:"name"`
+	Email           string `json:"email"`
+	BirthDate       string `json:"birth_date"`
+	ShippingAddress string `json:"shipping_address"`
+	BillingAddress  string `json:"billing_address"`
 }

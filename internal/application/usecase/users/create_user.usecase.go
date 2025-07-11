@@ -2,7 +2,6 @@ package user_usecase
 
 import (
 	"context"
-	configs "ecommerce-white-label-backend/cmd/config"
 	storage_adapter "ecommerce-white-label-backend/internal/domain/adapters/storage"
 	"ecommerce-white-label-backend/internal/domain/dto"
 	"ecommerce-white-label-backend/internal/domain/entity"
@@ -10,7 +9,6 @@ import (
 	domain_service "ecommerce-white-label-backend/internal/domain/service"
 	domain_usecase "ecommerce-white-label-backend/internal/domain/usecase/user"
 	"errors"
-	"fmt"
 
 	"github.com/google/uuid"
 )
@@ -56,13 +54,7 @@ func (u *CreateUserUsecase) Execute(ctx context.Context, input dto.CreateUserInp
 		}
 	}
 
-	photoPath := "avatar/default"
-
 	userUuid := uuid.New().String()
-
-	if input.Photo != nil {
-		photoPath = fmt.Sprintf("avatar/%s", userUuid)
-	}
 
 	entity := entity.NewUser(
 		userUuid,
@@ -70,25 +62,11 @@ func (u *CreateUserUsecase) Execute(ctx context.Context, input dto.CreateUserInp
 		input.BirthDate,
 		input.Name,
 		&encryptedPassword,
-		input.Sports,
-		input.Origin,
+		"local",
 		nil,
-		&photoPath,
+		input.ShippingAddress,
+		input.BillingAddress,
 	)
-
-	if input.Photo != nil {
-		err = u.StorageAdapter.UploadMedia(
-			ctx,
-			configs.MinIoCfg.ProfileBucket,
-			photoPath,
-			input.Photo.File,
-			input.Photo.FileSize,
-			input.Photo.ContentType,
-		)
-		if err != nil {
-			return err
-		}
-	}
 
 	err = u.UserRepository.Create(ctx, *entity)
 

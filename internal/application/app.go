@@ -161,7 +161,7 @@ func NewUseCases(
 	eventClient messaging.Client,
 ) UseCases {
 	userUsecase := user_usecase.NewCreateUserUseCase(userRepository, services.encryptStringService, adapters.storageAdapter)
-	getUserUsecase := user_usecase.NewGetUserProfileUseCase(userRepository, adapters.storageAdapter)
+	getUserUsecase := user_usecase.NewGetUserProfileUseCase(userRepository)
 	updateUserUsecase := user_usecase.NewUpdateUserUseCase(userRepository, adapters.storageAdapter)
 
 	//AUTH

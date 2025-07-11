@@ -1,15 +1,15 @@
 package entity
 
 type User struct {
-	Uuid         string   `json:"uuid"`
-	Email        string   `json:"email"`
-	BirthDate    string   `json:"birth_date"`
-	Name         string   `json:"name"`
-	Password     *[]byte  `json:"password,omitempty"`
-	Sports       []string `json:"sports"`
-	AuthProvider string   `json:"auth_provider"`
-	GoogleSub    *string  `json:"google_sub,omitempty"`
-	Photo        *string  `json:"photo,omitempty"`
+	Uuid            string  `json:"uuid"`
+	Email           string  `json:"email"`
+	Name            string  `json:"name"`
+	BirthDate       string  `json:"birth_date"`
+	BillingAddress  string  `json:"billing_address"`
+	ShippingAddress string  `json:"shipping_address"`
+	Password        *[]byte `json:"password,omitempty"`
+	AuthProvider    string  `json:"auth_provider"`
+	GoogleSub       *string `json:"google_sub,omitempty"`
 }
 
 func NewUser(
@@ -18,21 +18,21 @@ func NewUser(
 	birthDate string,
 	name string,
 	password *[]byte,
-	sports []string,
 	authProvider string,
 	googleSub *string,
-	photo *string,
+	shippingAddress string,
+	billingAddress string,
 ) *User {
 	entity := &User{
-		Uuid:         uuid,
-		Email:        email,
-		Name:         name,
-		Sports:       sports,
-		Password:     password,
-		BirthDate:    birthDate,
-		AuthProvider: authProvider,
-		GoogleSub:    googleSub,
-		Photo:        photo,
+		Uuid:            uuid,
+		Email:           email,
+		Name:            name,
+		Password:        password,
+		BirthDate:       birthDate,
+		AuthProvider:    authProvider,
+		GoogleSub:       googleSub,
+		ShippingAddress: shippingAddress,
+		BillingAddress:  billingAddress,
 	}
 	return entity
 }

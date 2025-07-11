@@ -9,13 +9,13 @@ type PhotoUpload struct {
 	ContentType string
 }
 type CreateUserInputDto struct {
-	Email     string
-	BirthDate string
-	Name      string
-	Password  *string
-	Sports    []string
-	Origin    string // e.g., "local" or "google"
-	Photo     *PhotoUpload
+	Email           string
+	BirthDate       string
+	Name            string
+	Password        *string
+	Origin          string // e.g., "local" or "google"
+	ShippingAddress string
+	BillingAddress  string
 }
 
 type GetUserInputDto struct {
@@ -23,12 +23,12 @@ type GetUserInputDto struct {
 }
 
 type UpdateUserInputDto struct {
-	Uuid      string       `json:"uuid"`
-	Email     *string      `json:"email"`
-	BirthDate *string      `json:"birth_date"`
-	Name      *string      `json:"name"`
-	Sports    *[]string    `json:"sports"`
-	Photo     *PhotoUpload `json:"photo"`
+	Uuid            string  `json:"uuid"`
+	Email           *string `json:"email"`
+	BirthDate       *string `json:"birth_date"`
+	Name            *string `json:"name"`
+	ShippingAddress *string `json:"shipping_address"`
+	BillingAddress  *string `json:"billing_address"`
 }
 
 type UserResetPasswordInputDto struct {

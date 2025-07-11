@@ -3,7 +3,6 @@ package web
 import (
 	"ecommerce-white-label-backend/internal/domain/dto"
 	"ecommerce-white-label-backend/internal/infra/web/requests"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,25 +21,13 @@ func (s *Server) CreateUserHandler(ctx *gin.Context) {
 	password := form.Get("password")
 
 	createUserDto := dto.CreateUserInputDto{
-		Email:     form.Get("email"),
-		BirthDate: form.Get("birth_date"),
-		Name:      form.Get("name"),
-		Password:  &password,
-		Sports:    form["sports"],
-		Origin:    "local",
-	}
-
-	fileHeader, err := ctx.FormFile("photo")
-
-	if err == nil {
-		file, err := fileHeader.Open()
-		createUserDto.Photo = &dto.PhotoUpload{}
-
-		if err == nil {
-			createUserDto.Photo.File = file
-			createUserDto.Photo.FileSize = fileHeader.Size
-			createUserDto.Photo.ContentType = fileHeader.Header.Get("Content-Type")
-		}
+		Email:           form.Get("email"),
+		BirthDate:       form.Get("birth_date"),
+		Name:            form.Get("name"),
+		Password:        &password,
+		Origin:          "local",
+		ShippingAddress: form.Get("shipping_address"),
+		BillingAddress:  form.Get("billing_address"),
 	}
 
 	err = s.CreateUserUsecase.Execute(ctx, createUserDto)
@@ -62,12 +49,13 @@ func (s *Server) CreateGoogleUserHandler(ctx *gin.Context) {
 	}
 
 	err := s.CreateUserUsecase.Execute(ctx, dto.CreateUserInputDto{
-		Email:     req.Email,
-		BirthDate: req.BirthDate,
-		Name:      req.Name,
-		Password:  nil,
-		Sports:    req.Sports,
-		Origin:    "google",
+		Email:           req.Email,
+		BirthDate:       req.BirthDate,
+		Name:            req.Name,
+		Password:        nil,
+		Origin:          "google",
+		ShippingAddress: req.ShippingAddress,
+		BillingAddress:  req.BillingAddress,
 	})
 
 	if err != nil {
@@ -130,21 +118,6 @@ func (s *Server) UpdateUserHandler(ctx *gin.Context) {
 
 	if form.Get("name") != "" {
 		editUserDto.Name = ptr(form.Get("name"))
-	}
-
-	fmt.Println("DTO", editUserDto)
-
-	fileHeader, err := ctx.FormFile("photo")
-
-	if err == nil {
-		file, err := fileHeader.Open()
-		editUserDto.Photo = &dto.PhotoUpload{}
-
-		if err == nil {
-			editUserDto.Photo.File = file
-			editUserDto.Photo.FileSize = fileHeader.Size
-			editUserDto.Photo.ContentType = fileHeader.Header.Get("Content-Type")
-		}
 	}
 
 	err = s.UpdateUserUsecase.Execute(ctx, editUserDto)

@@ -7,12 +7,12 @@ type PaginationMetadata struct {
 	TotalItems  int `json:"totalItems"`
 }
 
-const DEFAULT_ITEMS_PER_PAGE = 10
+const DEFAULT_ITEMS_PER_PAGE = 16
 
 func GetMetadataParams(currentPage int, totalItems int64) PaginationMetadata {
 	totalPages := totalItems / DEFAULT_ITEMS_PER_PAGE
 
-	if totalItems%10 != 0 {
+	if totalItems%DEFAULT_ITEMS_PER_PAGE != 0 {
 		totalPages++
 	}
 
