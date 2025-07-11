@@ -29,7 +29,8 @@ func Routes(engine *gin.Engine, server *Server) *gin.Engine {
 	}
 
 	{
-		product := engine.Group("/v1/product", middleware.JwtAuthMiddleware())
+		product := engine.Group("/product")
+		// product := engine.Group("/v1/product", middleware.JwtAuthMiddleware())
 		{
 			product.POST("/", server.CreateProductHandler)
 			// product.POST("/add-interaction", server.AddInteraction)

@@ -1,85 +1,73 @@
 package web
 
 import (
+	"ecommerce-white-label-backend/internal/domain/dto"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (s *Server) CreateProductHandler(ctx *gin.Context) {
-	// err := ctx.Request.ParseMultipartForm(10 << 20)
+	err := ctx.Request.ParseMultipartForm(10 << 20)
 
-	// if err != nil {
-	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid form data"})
-	// 	return
-	// }
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid form data"})
+		return
+	}
 
-	// form := ctx.Request.Form
+	form := ctx.Request.Form
 
-	// if form.Get("title") == "" ||
-	// 	form.Get("loc_latitude") == "" ||
-	// 	form.Get("loc_longitude") == "" ||
-	// 	form.Get("duration") == "" ||
-	// 	form.Get("type") == "" {
-	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Missing required fields"})
-	// 	return
-	// }
+	if form.Get("title") == "" ||
+		form.Get("description") == "" ||
+		form.Get("category") == "" ||
+		form.Get("price") == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Missing required fields"})
+		return
+	}
 
-	// durationInt, err := strconv.Atoi(form.Get("duration"))
-	// if err != nil {
-	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid duration"})
-	// 	return
-	// }
+	createProductDto := dto.CreateProductInputDto{
+		Title:       form.Get("title"),
+		Description: form.Get("description"),
+		Price:       form.Get("price"),
+		Category:    form.Get("category"),
+		Photos:      []*dto.PhotoUpload{},
+	}
 
-	// var distanceFloat float64
-	// if form.Get("duration") != "" {
-	// 	distanceFloat, err = strconv.ParseFloat(form.Get("duration"), 64)
-	// 	if err != nil {
-	// 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid duration"})
-	// 		return
-	// 	}
-	// }
+	multipartForm, err := ctx.MultipartForm()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Erro ao ler arquivos"})
+		return
+	}
 
-	// var comment string
-	// if form.Get("comment") != "" {
-	// 	distanceFloat, err = strconv.ParseFloat(form.Get("duration"), 64)
-	// 	if err != nil {
-	// 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid comment"})
-	// 		return
-	// 	}
-	// }
+	files := multipartForm.File["photos"]
+	if len(files) == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Envie pelo menos uma foto"})
+		return
+	}
 
-	// createProductDto := dto.CreateProductInputDto{
-	// 	Title: form.Get("title"),
-	// 	Location: dto.Location{
-	// 		Lat:  form.Get("loc_latitude"),
-	// 		Long: form.Get("loc_longitude"),
-	// 	},
-	// 	Duration: durationInt,
-	// 	Distance: &distanceFloat,
-	// 	Comment:  &comment,
-	// 	Type:     form.Get("type"),
-	// }
+	for _, fileHeader := range files {
+		file, err := fileHeader.Open()
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao abrir arquivo"})
+			return
+		}
 
-	// fileHeader, err := ctx.FormFile("photo")
+		photo := &dto.PhotoUpload{
+			File:        file,
+			FileSize:    fileHeader.Size,
+			ContentType: fileHeader.Header.Get("Content-Type"),
+			FileName:    fileHeader.Filename,
+		}
 
-	// if err == nil {
-	// 	file, err := fileHeader.Open()
-	// 	createProductDto.Photo = &dto.PhotoUpload{}
+		createProductDto.Photos = append(createProductDto.Photos, photo)
+	}
 
-	// 	if err == nil {
-	// 		createProductDto.Photo.File = file
-	// 		createProductDto.Photo.FileSize = fileHeader.Size
-	// 		createProductDto.Photo.ContentType = fileHeader.Header.Get("Content-Type")
-	// 	}
-	// }
+	err = s.CreateProductUsecase.Execute(ctx, createProductDto)
 
-	// err = s.CreateProductUsecase.Execute(ctx, createProductDto)
-
-	// if err != nil {
-	// 	ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
-	// 	return
-	// }
+	if err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
+	}
 
 	ctx.Status(http.StatusOK)
 }

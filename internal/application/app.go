@@ -170,25 +170,25 @@ func NewUseCases(
 	validateResetPasswordCodeUsecase := auth_usecase.NewValidateResetPasswordCodeUsecase(resetPasswordCodeRepository)
 
 	createProductUsecase := product_usecase.NewCreateProductUseCase(ProductRepository, adapters.storageAdapter, eventClient)
-	getProductDetailsUsecase := product_usecase.NewGetProductDetailsUseCase(ProductRepository, adapters.storageAdapter)
-	addProductInteractionUsecase := product_usecase.NewAddInteractionUseCase(ProductRepository)
-	getInteractionsUsecase := product_usecase.NewGetProductInteractionUsecase(ProductRepository, userRepository, adapters.storageAdapter)
+	// getProductDetailsUsecase := product_usecase.NewGetProductDetailsUseCase(ProductRepository, adapters.storageAdapter)
+	// addProductInteractionUsecase := product_usecase.NewAddInteractionUseCase(ProductRepository)
+	// getInteractionsUsecase := product_usecase.NewGetProductInteractionUsecase(ProductRepository, userRepository, adapters.storageAdapter)
 	deleteProductUsecase := product_usecase.NewDeleteProductUseCase(ProductRepository)
 
 	return UseCases{
-		userUseCase:                      userUsecase,
-		GetUserUsecase:                   getUserUsecase,
-		UpdateUserUsecase:                updateUserUsecase,
-		AuthUsecase:                      authUsecase,
-		GoogleAuthUsecase:                googleAuthUsecase,
-		CreateProductUsecase:             createProductUsecase,
-		GetProductDetailsUsecase:         getProductDetailsUsecase,
+		userUseCase:          userUsecase,
+		GetUserUsecase:       getUserUsecase,
+		UpdateUserUsecase:    updateUserUsecase,
+		AuthUsecase:          authUsecase,
+		GoogleAuthUsecase:    googleAuthUsecase,
+		CreateProductUsecase: createProductUsecase,
+		// GetProductDetailsUsecase:         getProductDetailsUsecase,
 		GenerateResetPasswordCodeUsecase: generateResetPasswordCodeUsecase,
 		ResetPasswordUsecase:             resetPasswordUsecase,
 		ValidateResetPasswordCodeUsecase: validateResetPasswordCodeUsecase,
-		AddProductInteractionsUsecase:    addProductInteractionUsecase,
-		GetProductInteractionUsecase:     getInteractionsUsecase,
-		DeleteProductUsecase:             deleteProductUsecase,
+		// AddProductInteractionsUsecase:    addProductInteractionUsecase,
+		// GetProductInteractionUsecase:     getInteractionsUsecase,
+		DeleteProductUsecase: deleteProductUsecase,
 	}
 }
 

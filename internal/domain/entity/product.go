@@ -4,60 +4,34 @@ import (
 	"time"
 )
 
-type Location struct {
-	Lat  string `json:"lat"`
-	Long string `json:"long"`
-}
-
-type EmojiReaction struct {
-	UserUuid  string `json:"user_uuid" bson:"user_uuid"`
-	Emoji     string `json:"emoji" bson:"emoji"`
-	Timestamp string `json:"timestamp" bson:"timestamp"`
-}
-
 type Product struct {
-	Uuid            string          `json:"uuid" bson:"uuid"`
-	UserUuid        string          `json:"user_uuid" bson:"user_uuid"`
-	Title           string          `json:"title" bson:"title"`
-	Location        Location        `json:"location" bson:"location"`
-	Duration        int             `json:"duration" bson:"duration"`
-	Pace            *string         `json:"pace" bson:"pace"`
-	Distance        *float64        `json:"distance" bson:"distance"`
-	Comment         *string         `json:"comment" bson:"comment"`
-	Type            string          `json:"type" bson:"type"`
-	Photo           string          `json:"photo" bson:"photo"`
-	CreatedAt       string          `json:"created_at" bson:"created_at"`
-	UpdatedAt       string          `json:"updated_at" bson:"updated_at"`
-	Reactions       []EmojiReaction `json:"reactions,omitempty" bson:"reactions,omitempty"`
-	ReactionSummary map[string]int  `json:"reaction_summary,omitempty" bson:"reaction_summary,omitempty"`
+	Uuid        string   `json:"uuid"`
+	Title       string   `json:"title"`
+	Description string   `json:"description"`
+	Price       float64  `json:"price"`
+	Photos      []string `json:"photo"`
+	Category    string   `json:"category"`
+	CreatedAt   string   `json:"created_at"`
+	UpdatedAt   string   `json:"updated_at"`
 }
 
 func NewProduct(
 	uuid string,
-	userUuid string,
 	title string,
-	location Location,
-	duration int,
-	distance *float64,
-	comment *string,
-	workoutType string,
-	photo string,
-	pace *string,
+	description string,
+	price float64,
+	photos []string,
+	category string,
 ) *Product {
 	entity := &Product{
-		Uuid:      uuid,
-		UserUuid:  userUuid,
-		Title:     title,
-		Location:  location,
-		Duration:  duration,
-		Distance:  distance,
-		Comment:   comment,
-		Type:      workoutType,
-		Photo:     photo,
-		Pace:      pace,
-		CreatedAt: time.Now().Format(time.RFC3339),
-		UpdatedAt: "",
-		Reactions: []EmojiReaction{},
+		Uuid:        uuid,
+		Title:       title,
+		Description: description,
+		Price:       price,
+		Photos:      photos,
+		Category:    category,
+		CreatedAt:   time.Now().Format(time.RFC3339),
+		UpdatedAt:   "",
 	}
 	return entity
 }

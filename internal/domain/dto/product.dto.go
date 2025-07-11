@@ -6,13 +6,11 @@ type Location struct {
 }
 
 type CreateProductInputDto struct {
-	Title    string       `json:"title"`
-	Location Location     `json:"location"`
-	Duration int          `json:"duration"`
-	Distance *float64     `json:"distance"`
-	Comment  *string      `json:"comment"`
-	Type     string       `json:"type"`
-	Photo    *PhotoUpload `json:"photo"`
+	Title       string         `json:"title"`
+	Description string         `json:"description"`
+	Price       string         `json:"price"`
+	Photos      []*PhotoUpload `json:"photos"`
+	Category    string         `json:"category"`
 }
 
 type GetProductDetailsInputDto struct {

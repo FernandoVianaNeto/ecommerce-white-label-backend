@@ -4,7 +4,6 @@ import (
 	"context"
 	domain_repository "ecommerce-white-label-backend/internal/domain/repository"
 	domain_product_usecase "ecommerce-white-label-backend/internal/domain/usecase/product"
-	"fmt"
 )
 
 type DeleteProductUsecase struct {
@@ -20,8 +19,8 @@ func NewDeleteProductUseCase(
 }
 
 func (u *DeleteProductUsecase) Execute(ctx context.Context, productUuid string) error {
-	fmt.Println(productUuid)
-	err := u.ProductRepository.Delete(ctx, productUuid)
+	// fmt.Println(productUuid)
+	// err := u.ProductRepository.Delete(ctx, productUuid)
 
-	return err
+	return nil
 }

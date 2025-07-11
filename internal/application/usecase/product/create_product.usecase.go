@@ -10,9 +10,9 @@ import (
 	domain_repository "ecommerce-white-label-backend/internal/domain/repository"
 	domain_product_usecase "ecommerce-white-label-backend/internal/domain/usecase/product"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/google/uuid"
 )
@@ -37,52 +37,57 @@ func NewCreateProductUseCase(
 
 func (u *CreateProductUsecase) Execute(ctx context.Context, input dto.CreateProductInputDto) error {
 	var (
-		pace string
-		err  error
+		photoPaths = make([]string, len(input.Photos))
+		err        error
 	)
 
-	value := ctx.Value("user_uuid")
+	// value := ctx.Value("user_uuid")
 
-	userUuid, ok := value.(string)
+	// userUuid, ok := value.(string)
 
-	if !ok {
-		return errors.New("user uuid not found in context")
-	}
-
-	photoPath := "photo/default"
+	// if !ok {
+	// 	return errors.New("user uuid not found in context")
+	// }
 
 	ProductUuid := uuid.New().String()
 
-	if input.Photo != nil {
-		photoPath = fmt.Sprintf("photo/%s", userUuid)
+	if input.Photos != nil {
+	}
+
+	for i, photo := range input.Photos {
+		photoPath := fmt.Sprintf("/product/%s/%d", ProductUuid, i+1)
+
+		photoPaths[i] = photoPath
+
+		if photo.File != nil {
+			err = u.StorageAdapter.UploadMedia(
+				ctx,
+				configs.MinIoCfg.ProductBucket,
+				photoPath,
+				photo.File,
+				photo.FileSize,
+				photo.ContentType,
+			)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	priceFloat, err := strconv.ParseFloat(input.Price, 64)
+	if err != nil {
+		log.Println("Error parsing price:", err)
+		return fmt.Errorf("invalid price format: %s", input.Price)
 	}
 
 	entity := entity.NewProduct(
 		ProductUuid,
-		string(userUuid),
 		input.Title,
-		entity.Location(input.Location),
-		input.Duration,
-		input.Distance,
-		input.Comment,
-		input.Type,
-		photoPath,
-		&pace,
+		input.Description,
+		priceFloat,
+		photoPaths,
+		input.Category,
 	)
-
-	if input.Photo != nil {
-		err = u.StorageAdapter.UploadMedia(
-			ctx,
-			configs.MinIoCfg.ProductBucket,
-			photoPath,
-			input.Photo.File,
-			input.Photo.FileSize,
-			input.Photo.ContentType,
-		)
-		if err != nil {
-			return err
-		}
-	}
 
 	err = u.ProductRepository.Create(ctx, *entity)
 
