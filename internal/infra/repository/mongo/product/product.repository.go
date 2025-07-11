@@ -6,7 +6,7 @@ import (
 	"ecommerce-white-label-backend/internal/domain/entity"
 	domain_repository "ecommerce-white-label-backend/internal/domain/repository"
 	domain_response "ecommerce-white-label-backend/internal/domain/response"
-	"fmt"
+	"errors"
 	"strconv"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -44,9 +44,6 @@ func (f *ProductRepository) Create(ctx context.Context, input entity.Product) er
 }
 
 func (f *ProductRepository) ListProducts(ctx context.Context, pageStr string) (domain_response.ListProductsPaginatedResponse, error) {
-
-	fmt.Println("CHEGUEI AQUI 1", pageStr)
-
 	page, err := strconv.Atoi(pageStr)
 	if err != nil || page < 1 {
 		page = 1
@@ -57,8 +54,6 @@ func (f *ProductRepository) ListProducts(ctx context.Context, pageStr string) (d
 		Items:    []entity.Product{},
 		Metadata: defaultMetadata,
 	}
-
-	fmt.Println("CHEGUEI AQUI 2")
 
 	limit := int64(domain_response.DEFAULT_ITEMS_PER_PAGE)
 	skip := int64((page - 1)) * limit
@@ -108,48 +103,36 @@ func (f *ProductRepository) ListProducts(ctx context.Context, pageStr string) (d
 	return response, nil
 }
 
-// func (f *ProductRepository) GetByUuid(ctx context.Context, uuid string) (*entity.Product, error) {
-// 	var model ProductModel
+func (f *ProductRepository) GetByUuid(ctx context.Context, uuid string) (*entity.Product, error) {
+	var model ProductModel
 
-// 	filter := bson.M{
-// 		"uuid": uuid,
-// 	}
+	filter := bson.M{
+		"uuid": uuid,
+	}
 
-// 	err := f.collection.FindOne(ctx, filter).Decode(&model)
+	err := f.collection.FindOne(ctx, filter).Decode(&model)
 
-// 	if err != nil {
-// 		if errors.Is(err, mongo.ErrNoDocuments) {
-// 			return nil, nil
-// 		}
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, nil
+		}
 
-// 		return nil, err
-// 	}
+		return nil, err
+	}
 
-// 	reactionSummary := make(map[string]int)
-// 	for _, r := range model.Reactions {
-// 		reactionSummary[r.Emoji]++
-// 	}
+	entity := entity.Product{
+		Uuid:        model.Uuid,
+		Title:       model.Title,
+		Description: model.Description,
+		Price:       model.Price,
+		Photos:      model.Photos,
+		Category:    model.Category,
+		CreatedAt:   model.CreatedAt,
+	}
+	// TODO REFATORAR USE CASE DO GET Product DETAILS PARA RETORNAR APENAS O NECESSÁRIO
 
-// 	entity := entity.Product{
-// 		Uuid:            model.Uuid,
-// 		UserUuid:        model.UserUuid,
-// 		Title:           model.Title,
-// 		Location:        entity.Location(model.Location),
-// 		Duration:        model.Duration,
-// 		Pace:            model.Pace,
-// 		Distance:        model.Distance,
-// 		Comment:         model.Comment,
-// 		Type:            model.Type,
-// 		Photo:           model.Photo,
-// 		CreatedAt:       model.CreatedAt,
-// 		UpdatedAt:       model.UpdatedAt,
-// 		ReactionSummary: reactionSummary,
-// 		Reactions:       ConvertReactions(model.Reactions),
-// 	}
-// 	// TODO REFATORAR USE CASE DO GET Product DETAILS PARA RETORNAR APENAS O NECESSÁRIO
-
-// 	return &entity, err
-// }
+	return &entity, err
+}
 
 // func (f *ProductRepository) AddInteraction(ctx context.Context, input dto.AddProductInteractionInputDto) error {
 // 	filter := bson.M{

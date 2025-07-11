@@ -17,10 +17,10 @@ type Server struct {
 	AuthUseCase       domain_auth_usecase.AuthUsecaseInterface
 	GoogleAuthUsecase domain_auth_usecase.GoogleAuthUsecaseInterface
 
-	CreateProductUsecase domain_product_usecase.CreateProductUsecaseInterface
-	ListProductsUsecase  domain_product_usecase.ListProductsUsecaseInterface
+	CreateProductUsecase     domain_product_usecase.CreateProductUsecaseInterface
+	ListProductsUsecase      domain_product_usecase.ListProductsUsecaseInterface
+	GetProductDetailsUsecase domain_product_usecase.GetProductDetailsUsecaseInterface
 
-	// GetProductDetailsUsecase      domain_product_usecase.GetProductDetailsUsecaseInterface
 	// AddProductInteractionsUsecase domain_product_usecase.AddInteractionUsecaseInterface
 	// GetProductInteractionsUsecase domain_product_usecase.GetInteractionUsecaseInterface
 	// DeleteProductUsecase          domain_product_usecase.DeleteProductUsecaseInterface
@@ -38,7 +38,7 @@ func NewServer(
 	authUsecase domain_auth_usecase.AuthUsecaseInterface,
 	createProductUsecase domain_product_usecase.CreateProductUsecaseInterface,
 	listProductsUsecase domain_product_usecase.ListProductsUsecaseInterface,
-	// getProductDetailsUsecase domain_product_usecase.GetProductDetailsUsecaseInterface,
+	getProductDetailsUsecase domain_product_usecase.GetProductDetailsUsecaseInterface,
 	googleAuthUsecase domain_auth_usecase.GoogleAuthUsecaseInterface,
 	generateResetPasswordCodeUsecase domain_auth_usecase.GenerateResetPasswordCodeUsecaseInterface,
 	resetPasswordUsecase domain_auth_usecase.ResetPasswordUsecaseInterface,
@@ -50,13 +50,13 @@ func NewServer(
 	router := gin.Default()
 
 	server := &Server{
-		CreateUserUsecase:    createUserUsecase,
-		GetUserUsecase:       getUserUsecase,
-		UpdateUserUsecase:    updateUserUsecase,
-		AuthUseCase:          authUsecase,
-		CreateProductUsecase: createProductUsecase,
-		ListProductsUsecase:  listProductsUsecase,
-		// GetProductDetailsUsecase:         getProductDetailsUsecase,
+		CreateUserUsecase:                createUserUsecase,
+		GetUserUsecase:                   getUserUsecase,
+		UpdateUserUsecase:                updateUserUsecase,
+		AuthUseCase:                      authUsecase,
+		CreateProductUsecase:             createProductUsecase,
+		ListProductsUsecase:              listProductsUsecase,
+		GetProductDetailsUsecase:         getProductDetailsUsecase,
 		GoogleAuthUsecase:                googleAuthUsecase,
 		GenerateResetPasswordCodeUsecase: generateResetPasswordCodeUsecase,
 		ResetPasswordUsecase:             resetPasswordUsecase,

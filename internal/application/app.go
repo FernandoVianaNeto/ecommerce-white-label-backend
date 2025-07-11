@@ -101,7 +101,7 @@ func NewApplication() *web.Server {
 		usecases.AuthUsecase,
 		usecases.CreateProductUsecase,
 		usecases.ListProductsUsecase,
-		// usecases.GetProductDetailsUsecase,
+		usecases.GetProductDetailsUsecase,
 		usecases.GoogleAuthUsecase,
 		usecases.GenerateResetPasswordCodeUsecase,
 		usecases.ResetPasswordUsecase,
@@ -173,20 +173,20 @@ func NewUseCases(
 
 	createProductUsecase := product_usecase.NewCreateProductUseCase(ProductRepository, adapters.storageAdapter, eventClient)
 	listProductsUsecase := product_usecase.NewListProductsUseCase(ProductRepository)
-	// getProductDetailsUsecase := product_usecase.NewGetProductDetailsUseCase(ProductRepository, adapters.storageAdapter)
+	getProductDetailsUsecase := product_usecase.NewGetProductDetailsUseCase(ProductRepository, adapters.storageAdapter)
 	// addProductInteractionUsecase := product_usecase.NewAddInteractionUseCase(ProductRepository)
 	// getInteractionsUsecase := product_usecase.NewGetProductInteractionUsecase(ProductRepository, userRepository, adapters.storageAdapter)
 	deleteProductUsecase := product_usecase.NewDeleteProductUseCase(ProductRepository)
 
 	return UseCases{
-		userUseCase:          userUsecase,
-		GetUserUsecase:       getUserUsecase,
-		UpdateUserUsecase:    updateUserUsecase,
-		AuthUsecase:          authUsecase,
-		GoogleAuthUsecase:    googleAuthUsecase,
-		CreateProductUsecase: createProductUsecase,
-		ListProductsUsecase:  listProductsUsecase,
-		// GetProductDetailsUsecase:         getProductDetailsUsecase,
+		userUseCase:                      userUsecase,
+		GetUserUsecase:                   getUserUsecase,
+		UpdateUserUsecase:                updateUserUsecase,
+		AuthUsecase:                      authUsecase,
+		GoogleAuthUsecase:                googleAuthUsecase,
+		CreateProductUsecase:             createProductUsecase,
+		ListProductsUsecase:              listProductsUsecase,
+		GetProductDetailsUsecase:         getProductDetailsUsecase,
 		GenerateResetPasswordCodeUsecase: generateResetPasswordCodeUsecase,
 		ResetPasswordUsecase:             resetPasswordUsecase,
 		ValidateResetPasswordCodeUsecase: validateResetPasswordCodeUsecase,

@@ -33,7 +33,7 @@ func Routes(engine *gin.Engine, server *Server) *gin.Engine {
 		{
 			product.POST("/", server.CreateProductHandler)
 			product.GET("/list", server.ListProducts)
-			// product.GET("/:uuid", server.GetproductDetails)
+			product.GET("/:uuid", server.GetProductDetailHandler)
 			// product.GET("/user/:uuid", server.ListUserproducts)
 			// product.GET("/:uuid/interactions", server.GetInteractions)
 			// product.DELETE("/:uuid", server.DeleteWorkoutHandler)

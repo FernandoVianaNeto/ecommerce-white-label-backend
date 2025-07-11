@@ -13,7 +13,7 @@ const ProductCollection = "products"
 type ProductRepositoryInterface interface {
 	Create(ctx context.Context, entity entity.Product) error
 	ListProducts(ctx context.Context, page string) (domain_response.ListProductsPaginatedResponse, error)
-	// GetByUuid(ctx context.Context, uuid string) (*entity.Product, error)
+	GetByUuid(ctx context.Context, uuid string) (*entity.Product, error)
 	// AddInteraction(ctx context.Context, input dto.AddProductInteractionInputDto) error
 	// Delete(ctx context.Context, productUuid string) error
 }

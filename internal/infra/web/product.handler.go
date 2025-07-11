@@ -91,27 +91,27 @@ func (s *Server) ListProducts(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
-// func (s *Server) GetProductDetails(ctx *gin.Context) {
-// 	var req requests.GetProductDetailsRequest
+func (s *Server) GetProductDetailHandler(ctx *gin.Context) {
+	var req requests.GetProductDetailsRequest
 
-// 	if err := ctx.ShouldBindUri(&req); err != nil {
-// 		ctx.JSON(http.StatusBadRequest, "Invalid param")
-// 		return
-// 	}
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, "Invalid param")
+		return
+	}
 
-// 	response, err := s.GetProductDetailsUsecase.Execute(ctx, dto.GetProductDetailsInputDto{Uuid: req.Uuid})
+	response, err := s.GetProductDetailsUsecase.Execute(ctx, dto.GetProductDetailsInputDto{Uuid: req.Uuid})
 
-// 	if err != nil {
-// 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
-// 		return
-// 	}
+	if err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
+	}
 
-// 	if response == nil {
-// 		ctx.JSON(http.StatusNotFound, "Product not found")
-// 	}
+	if response == nil {
+		ctx.JSON(http.StatusNotFound, "Product not found")
+	}
 
-// 	ctx.JSON(http.StatusOK, response)
-// }
+	ctx.JSON(http.StatusOK, response)
+}
 
 // func (s *Server) AddInteraction(ctx *gin.Context) {
 // 	var req requests.AddProductInteractionRequest
