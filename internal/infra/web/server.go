@@ -17,11 +17,13 @@ type Server struct {
 	AuthUseCase       domain_auth_usecase.AuthUsecaseInterface
 	GoogleAuthUsecase domain_auth_usecase.GoogleAuthUsecaseInterface
 
-	CreateProductUsecase          domain_product_usecase.CreateProductUsecaseInterface
-	GetProductDetailsUsecase      domain_product_usecase.GetProductDetailsUsecaseInterface
-	AddProductInteractionsUsecase domain_product_usecase.AddInteractionUsecaseInterface
-	GetProductInteractionsUsecase domain_product_usecase.GetInteractionUsecaseInterface
-	DeleteProductUsecase          domain_product_usecase.DeleteProductUsecaseInterface
+	CreateProductUsecase domain_product_usecase.CreateProductUsecaseInterface
+	ListProductsUsecase  domain_product_usecase.ListProductsUsecaseInterface
+
+	// GetProductDetailsUsecase      domain_product_usecase.GetProductDetailsUsecaseInterface
+	// AddProductInteractionsUsecase domain_product_usecase.AddInteractionUsecaseInterface
+	// GetProductInteractionsUsecase domain_product_usecase.GetInteractionUsecaseInterface
+	// DeleteProductUsecase          domain_product_usecase.DeleteProductUsecaseInterface
 
 	GenerateResetPasswordCodeUsecase domain_auth_usecase.GenerateResetPasswordCodeUsecaseInterface
 	ResetPasswordUsecase             domain_auth_usecase.ResetPasswordUsecaseInterface
@@ -35,31 +37,33 @@ func NewServer(
 	updateUserUsecase domain_usecase.UpdateUserUsecaseInterface,
 	authUsecase domain_auth_usecase.AuthUsecaseInterface,
 	createProductUsecase domain_product_usecase.CreateProductUsecaseInterface,
-	getProductDetailsUsecase domain_product_usecase.GetProductDetailsUsecaseInterface,
+	listProductsUsecase domain_product_usecase.ListProductsUsecaseInterface,
+	// getProductDetailsUsecase domain_product_usecase.GetProductDetailsUsecaseInterface,
 	googleAuthUsecase domain_auth_usecase.GoogleAuthUsecaseInterface,
 	generateResetPasswordCodeUsecase domain_auth_usecase.GenerateResetPasswordCodeUsecaseInterface,
 	resetPasswordUsecase domain_auth_usecase.ResetPasswordUsecaseInterface,
 	validateResetPasswordCodeUsecase domain_auth_usecase.ValidateResetPasswordCodeUsecaseInterface,
-	addProductInteractionUsecase domain_product_usecase.AddInteractionUsecaseInterface,
-	getProductInteractionsUsecase domain_product_usecase.GetInteractionUsecaseInterface,
-	deleteProductUsecase domain_product_usecase.DeleteProductUsecaseInterface,
+	// addProductInteractionUsecase domain_product_usecase.AddInteractionUsecaseInterface,
+	// getProductInteractionsUsecase domain_product_usecase.GetInteractionUsecaseInterface,
+	// deleteProductUsecase domain_product_usecase.DeleteProductUsecaseInterface,
 ) *Server {
 	router := gin.Default()
 
 	server := &Server{
-		CreateUserUsecase:                createUserUsecase,
-		GetUserUsecase:                   getUserUsecase,
-		UpdateUserUsecase:                updateUserUsecase,
-		AuthUseCase:                      authUsecase,
-		CreateProductUsecase:             createProductUsecase,
-		GetProductDetailsUsecase:         getProductDetailsUsecase,
+		CreateUserUsecase:    createUserUsecase,
+		GetUserUsecase:       getUserUsecase,
+		UpdateUserUsecase:    updateUserUsecase,
+		AuthUseCase:          authUsecase,
+		CreateProductUsecase: createProductUsecase,
+		ListProductsUsecase:  listProductsUsecase,
+		// GetProductDetailsUsecase:         getProductDetailsUsecase,
 		GoogleAuthUsecase:                googleAuthUsecase,
 		GenerateResetPasswordCodeUsecase: generateResetPasswordCodeUsecase,
 		ResetPasswordUsecase:             resetPasswordUsecase,
 		ValidateResetPasswordCodeUsecase: validateResetPasswordCodeUsecase,
-		AddProductInteractionsUsecase:    addProductInteractionUsecase,
-		GetProductInteractionsUsecase:    getProductInteractionsUsecase,
-		DeleteProductUsecase:             deleteProductUsecase,
+		// AddProductInteractionsUsecase:    addProductInteractionUsecase,
+		// GetProductInteractionsUsecase:    getProductInteractionsUsecase,
+		// DeleteProductUsecase:             deleteProductUsecase,
 	}
 	server.router = Routes(router, server)
 

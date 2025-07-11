@@ -5,8 +5,13 @@ import (
 	configs "ecommerce-white-label-backend/cmd/config"
 	"ecommerce-white-label-backend/internal/domain/entity"
 	domain_repository "ecommerce-white-label-backend/internal/domain/repository"
+	domain_response "ecommerce-white-label-backend/internal/domain/response"
+	"fmt"
+	"strconv"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type ProductRepository struct {
@@ -36,6 +41,71 @@ func (f *ProductRepository) Create(ctx context.Context, input entity.Product) er
 	})
 
 	return err
+}
+
+func (f *ProductRepository) ListProducts(ctx context.Context, pageStr string) (domain_response.ListProductsPaginatedResponse, error) {
+
+	fmt.Println("CHEGUEI AQUI 1", pageStr)
+
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	defaultMetadata := domain_response.GetMetadataParams(page, 10)
+	defaultResponse := domain_response.ListProductsPaginatedResponse{
+		Items:    []entity.Product{},
+		Metadata: defaultMetadata,
+	}
+
+	fmt.Println("CHEGUEI AQUI 2")
+
+	limit := int64(domain_response.DEFAULT_ITEMS_PER_PAGE)
+	skip := int64((page - 1)) * limit
+
+	filter := bson.M{}
+
+	opts := options.Find()
+	opts.SetLimit(limit)
+	opts.SetSkip(skip)
+	opts.SetSort(bson.M{"created_at": -1})
+
+	total, err := f.collection.CountDocuments(ctx, filter)
+
+	if err != nil {
+		return defaultResponse, err
+	}
+
+	cursor, err := f.collection.Find(ctx, filter, opts)
+	if err != nil {
+		return defaultResponse, err
+	}
+
+	var Products []ProductModel
+	if err = cursor.All(ctx, &Products); err != nil {
+		return defaultResponse, err
+	}
+
+	entitiesProduct := make([]entity.Product, 0, len(Products))
+	for _, Product := range Products {
+		entitiesProduct = append(entitiesProduct, entity.Product{
+			Uuid:        Product.Uuid,
+			Title:       Product.Title,
+			Description: Product.Description,
+			Price:       Product.Price,
+			Photos:      Product.Photos,
+			Category:    Product.Category,
+			CreatedAt:   Product.CreatedAt,
+			UpdatedAt:   Product.UpdatedAt,
+		})
+	}
+
+	response := domain_response.ListProductsPaginatedResponse{
+		Items:    entitiesProduct,
+		Metadata: domain_response.GetMetadataParams(page, total),
+	}
+
+	return response, nil
 }
 
 // func (f *ProductRepository) GetByUuid(ctx context.Context, uuid string) (*entity.Product, error) {
@@ -79,78 +149,6 @@ func (f *ProductRepository) Create(ctx context.Context, input entity.Product) er
 // 	// TODO REFATORAR USE CASE DO GET Product DETAILS PARA RETORNAR APENAS O NECESSÁRIO
 
 // 	return &entity, err
-// }
-
-// func (f *ProductRepository) ListUserProducts(ctx context.Context, userUuid string, pageStr string) (domain_response.ListProductsPaginatedResponse, error) {
-// 	page, err := strconv.Atoi(pageStr)
-// 	if err != nil || page < 1 {
-// 		page = 1
-// 	}
-
-// 	defaultMetadata := domain_response.GetMetadataParams(page, 10)
-// 	defaultResponse := domain_response.ListProductsPaginatedResponse{
-// 		Items:    []entity.Product{},
-// 		Metadata: defaultMetadata,
-// 	}
-
-// 	limit := int64(domain_response.DEFAULT_ITEMS_PER_PAGE)
-// 	skip := int64((page - 1)) * limit
-
-// 	filter := bson.M{
-// 		"user_uuid": userUuid,
-// 	}
-
-// 	opts := options.Find()
-// 	opts.SetLimit(limit)
-// 	opts.SetSkip(skip)
-// 	opts.SetSort(bson.M{"created_at": -1})
-
-// 	total, err := f.collection.CountDocuments(ctx, filter)
-
-// 	if err != nil {
-// 		return defaultResponse, err
-// 	}
-
-// 	cursor, err := f.collection.Find(ctx, filter, opts)
-// 	if err != nil {
-// 		return defaultResponse, err
-// 	}
-
-// 	var Products []ProductModel
-// 	if err = cursor.All(ctx, &Products); err != nil {
-// 		return defaultResponse, err
-// 	}
-
-// 	entitiesProduct := make([]entity.Product, 0, len(Products))
-// 	for _, Product := range Products {
-// 		reactionSummary := make(map[string]int)
-// 		for _, r := range Product.Reactions {
-// 			reactionSummary[r.Emoji]++
-// 		}
-
-// 		entitiesProduct = append(entitiesProduct, entity.Product{
-// 			Uuid:            Product.Uuid,
-// 			UserUuid:        Product.UserUuid,
-// 			Title:           Product.Title,
-// 			Location:        entity.Location(Product.Location),
-// 			Duration:        Product.Duration,
-// 			Pace:            Product.Pace,
-// 			Distance:        Product.Distance,
-// 			Comment:         Product.Comment,
-// 			Type:            Product.Type,
-// 			Photo:           Product.Photo,
-// 			CreatedAt:       Product.CreatedAt,
-// 			UpdatedAt:       Product.UpdatedAt,
-// 			ReactionSummary: reactionSummary,
-// 		})
-// 	}
-
-// 	response := domain_response.ListProductsPaginatedResponse{
-// 		Items:    entitiesProduct,
-// 		Metadata: domain_response.GetMetadataParams(page, total),
-// 	}
-
-// 	return response, nil
 // }
 
 // func (f *ProductRepository) AddInteraction(ctx context.Context, input dto.AddProductInteractionInputDto) error {

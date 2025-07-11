@@ -12,12 +12,9 @@ type DeleteProductRequest struct {
 	Uuid string `uri:"uuid"`
 }
 
-type ListUserProductsRequest struct {
-	UserUuid string `uri:"uuid"`
-}
-
 type ListUserProductsQueryParams struct {
 	Page string `form:"page"`
+	// Category string `form:"category"`
 }
 
 type AddProductInteractionRequest struct {

@@ -39,6 +39,7 @@ type UseCases struct {
 	AuthUsecase                      domain_auth_usecase.AuthUsecaseInterface
 	GoogleAuthUsecase                domain_auth_usecase.GoogleAuthUsecaseInterface
 	CreateProductUsecase             domain_product_usecase.CreateProductUsecaseInterface
+	ListProductsUsecase              domain_product_usecase.ListProductsUsecaseInterface
 	GetProductDetailsUsecase         domain_product_usecase.GetProductDetailsUsecaseInterface
 	AddProductInteractionsUsecase    domain_product_usecase.AddInteractionUsecaseInterface
 	GetProductInteractionUsecase     domain_product_usecase.GetInteractionUsecaseInterface
@@ -99,14 +100,15 @@ func NewApplication() *web.Server {
 		usecases.UpdateUserUsecase,
 		usecases.AuthUsecase,
 		usecases.CreateProductUsecase,
-		usecases.GetProductDetailsUsecase,
+		usecases.ListProductsUsecase,
+		// usecases.GetProductDetailsUsecase,
 		usecases.GoogleAuthUsecase,
 		usecases.GenerateResetPasswordCodeUsecase,
 		usecases.ResetPasswordUsecase,
 		usecases.ValidateResetPasswordCodeUsecase,
-		usecases.AddProductInteractionsUsecase,
-		usecases.GetProductInteractionUsecase,
-		usecases.DeleteProductUsecase,
+		// usecases.AddProductInteractionsUsecase,
+		// usecases.GetProductInteractionUsecase,
+		// usecases.DeleteProductUsecase,
 	)
 
 	return srv
@@ -170,6 +172,7 @@ func NewUseCases(
 	validateResetPasswordCodeUsecase := auth_usecase.NewValidateResetPasswordCodeUsecase(resetPasswordCodeRepository)
 
 	createProductUsecase := product_usecase.NewCreateProductUseCase(ProductRepository, adapters.storageAdapter, eventClient)
+	listProductsUsecase := product_usecase.NewListProductsUseCase(ProductRepository)
 	// getProductDetailsUsecase := product_usecase.NewGetProductDetailsUseCase(ProductRepository, adapters.storageAdapter)
 	// addProductInteractionUsecase := product_usecase.NewAddInteractionUseCase(ProductRepository)
 	// getInteractionsUsecase := product_usecase.NewGetProductInteractionUsecase(ProductRepository, userRepository, adapters.storageAdapter)
@@ -182,6 +185,7 @@ func NewUseCases(
 		AuthUsecase:          authUsecase,
 		GoogleAuthUsecase:    googleAuthUsecase,
 		CreateProductUsecase: createProductUsecase,
+		ListProductsUsecase:  listProductsUsecase,
 		// GetProductDetailsUsecase:         getProductDetailsUsecase,
 		GenerateResetPasswordCodeUsecase: generateResetPasswordCodeUsecase,
 		ResetPasswordUsecase:             resetPasswordUsecase,

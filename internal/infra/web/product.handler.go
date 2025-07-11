@@ -2,6 +2,7 @@ package web
 
 import (
 	"ecommerce-white-label-backend/internal/domain/dto"
+	"ecommerce-white-label-backend/internal/infra/web/requests"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -72,6 +73,24 @@ func (s *Server) CreateProductHandler(ctx *gin.Context) {
 	ctx.Status(http.StatusOK)
 }
 
+func (s *Server) ListProducts(ctx *gin.Context) {
+	var queryParams requests.ListUserProductsQueryParams
+
+	if err := ctx.ShouldBindQuery(&queryParams); err != nil {
+		ctx.JSON(http.StatusBadRequest, "Invalid query")
+		return
+	}
+
+	response, err := s.ListProductsUsecase.Execute(ctx, queryParams.Page)
+
+	if err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
 // func (s *Server) GetProductDetails(ctx *gin.Context) {
 // 	var req requests.GetProductDetailsRequest
 
@@ -89,25 +108,6 @@ func (s *Server) CreateProductHandler(ctx *gin.Context) {
 
 // 	if response == nil {
 // 		ctx.JSON(http.StatusNotFound, "Product not found")
-// 	}
-
-// 	ctx.JSON(http.StatusOK, response)
-// }
-
-// func (s *Server) ListUserProducts(ctx *gin.Context) {
-// 	var queryParams requests.ListUserProductsQueryParams
-// 	var req requests.ListUserProductsRequest
-
-// 	if err := ctx.ShouldBindUri(&req); err != nil {
-// 		ctx.JSON(http.StatusBadRequest, "Invalid param")
-// 		return
-// 	}
-
-// 	response, err := s.ListUserProductsUsecase.Execute(ctx, dto.ListUserProductsInputDto{UserUuid: req.UserUuid, Page: queryParams.Page})
-
-// 	if err != nil {
-// 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
-// 		return
 // 	}
 
 // 	ctx.JSON(http.StatusOK, response)
